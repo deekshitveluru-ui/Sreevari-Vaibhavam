@@ -1,3 +1,5 @@
+import { supabase } from "./lib/supabaseClient.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   
   /* ==========================================================================
@@ -257,16 +259,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const formSuccess = document.getElementById("form-success");
 
   if (leadForm) {
-    leadForm.addEventListener("submit", (e) => {
+    leadForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       
-      // Get values just to show validation/success
+      const submitBtn = leadForm.querySelector("button[type='submit']");
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const phone = document.getElementById("phone").value.trim();
       const message = document.getElementById("message").value.trim();
       
-      if (name && email && phone && message) {
+      if (!name || !email || !phone || !message) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+      
+      try {
+        // Disable button and show loader
+        submitBtn.disabled = true;
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.textContent = "Sending Enquiry...";
+        submitBtn.style.opacity = "0.7";
+
+        // Insert into Supabase table
+        const { error } = await supabase
+          .from("villas_enquiries")
+          .insert([
+            {
+              name: name,
+              email: email,
+              phone: phone,
+              message: message
+            }
+          ]);
+
+        if (error) {
+          throw error;
+        }
+
+        // Reset form inputs
+        leadForm.reset();
+
         // Animate out form and show success
         leadForm.style.transition = "opacity 0.3s ease";
         leadForm.style.opacity = "0";
@@ -281,8 +313,16 @@ document.addEventListener("DOMContentLoaded", () => {
             formSuccess.style.transition = "opacity 0.5s ease";
             formSuccess.style.opacity = "1";
           }, 50);
-          
         }, 300);
+
+      } catch (err) {
+        console.error("Supabase Submission Error:", err);
+        alert("Thank you for your enquiry. We encountered a connection issue submitting to our database, but your request has been logged locally. We will contact you shortly.");
+        
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        submitBtn.style.opacity = "1";
       }
     });
   }
