@@ -1,0 +1,17 @@
+{
+  "name": "sreevari-vaibhavam",
+  "version": "1.0.0",
+  "description": "",
+  "main": "inspect_images.js",
+  "scripts": {
+    "dev": "npx -y serve .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "jpeg-js": "^0.4.4"
+  }
+}
