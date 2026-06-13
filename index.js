@@ -80,13 +80,13 @@ document.addEventListener("DOMContentLoaded", () => {
     "east-living": {
       title: "Spacious Living Room",
       dim: "12'-6\" x 15'-6\"",
-      desc: "The focal point of the home, crafted with custom cedar paneling, high ceilings, and full-height sliding glass windows overlooking the wrap-around landscaped garden.",
+      desc: "The focal point of the home, crafted with custom cedar paneling, high ceilings, windows overlooking the wrap-around landscaped garden.",
       badges: ["Garden Vistas", "Premium Flooring", "Ambient Lighting"]
     },
     "east-pooja": {
       title: "Traditional Pooja Room",
       dim: "5'-0\" x 3'-6\"",
-      desc: "Meticulously designed prayer room in accordance with traditional values. Offers positive energy flow, wood-slat partitions, and quiet seclusion.",
+      desc: "Meticulously designed prayer room in accordance with traditional values. Offers positive energy flow.",
       badges: ["100% Vastu Compliant", "Wood Partition", "Eastern Placement"]
     },
     "east-master-bed": {
@@ -106,37 +106,37 @@ document.addEventListener("DOMContentLoaded", () => {
     "west-parking": {
       title: "Private Car Portico",
       dim: "15'-0\" x 8'-9\"",
-      desc: "Sheltered driveway situated on the north-west edge, featuring recessed LED downlights and private pathway access into the living quarters.",
+      desc: "A spacious, premium stone-paved driveway portico connected directly to the primary foyer entrance. Perfectly sized for luxury SUVs and sedans.",
       badges: ["Recessed Downlights", "Wide Entryway", "Vastu Placed"]
     },
     "west-living-dining": {
       title: "Grand Living & Dining Hall",
       dim: "26'-7½\" x 12'-6\"",
-      desc: "An expansive, seamless family lounge and dining area spanning over 26 feet in length, providing an unmatched sense of space and sliding doors to the landscape deck.",
+      desc: "An expansive, seamless family lounge and dining area spanning over 26 feet in length, providing an unmatched sense of space.",
       badges: ["Continuous Open Plan", "Garden Deck Access", "Expansive Glazing"]
     },
     "west-master-bed": {
       title: "Master Bedroom",
       dim: "13'-10½\" x 10'-9\"",
-      desc: "Secluded master bedroom located in the south-west sector, optimized for maximum sound proofing, comfort, and private attach bath utility.",
+      desc: "An ultra-spacious master sanctuary situated in the south-west quadrant. Features rich wood paneling highlights, dedicated closet corridors, and a private attached bath.",
       badges: ["Attached Toilet", "South-West Quadrant", "Wood Accents"]
     },
     "west-child-bed": {
       title: "Children's Bedroom",
       dim: "10'-0\" x 11'-1½\"",
-      desc: "A quiet, well-ventilated secondary room in the north-west zone. Excellent light penetration during the day, ideal for children or a modern study office.",
+      desc: "A quiet, well-ventilated secondary room in the south-west zone. Excellent light during the day, ideal for children or a modern study space.",
       badges: ["North-West Aligned", "Attached Bath", "Study Space Option"]
     },
     "west-kitchen": {
       title: "Modular Kitchen",
       dim: "7'-0\" x 11'-7½\"",
-      desc: "Designed for premium efficiency, a linear layout that features stone counter-tops, utility wash areas, and modern built-in appliance provisions.",
+      desc: "A modern kitchen layout complete with modular counters, seamless storage cabinets",
       badges: ["Linear Efficiency", "Utility Balcony Connect", "Heavy Ventilation"]
     },
     "west-pooja": {
       title: "Vastu Pooja Room",
       dim: "3'-6\" x 3'-0\"",
-      desc: "A neat, sacred space custom-built with rich warm wood accents, positioned in the north-east zone to welcome maximum positive energy.",
+      desc: "Meticulously designed prayer room in accordance with traditional values. Offers positive energy flow.",
       badges: ["North-East Placement", "Positive Aura", "Traditional Wood Trim"]
     }
   };
