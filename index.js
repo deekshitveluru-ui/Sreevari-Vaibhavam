@@ -1,10 +1,18 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+const supabaseUrl = 'https://qvfqloadircvabboicdy.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2ZnFsb2FkaXJjdmFiYm9pY2R5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNTM2MjMsImV4cCI6MjA5NjgyOTYyM30.E5Q7MLkyyAy_20y3BDI-ZPojDpp5ZSIuyAgZrnxKOp0'
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+
+// Supabase Client initialized successfully above
+
 document.addEventListener("DOMContentLoaded", () => {
-  
+
   /* ==========================================================================
      STUFF NAVIGATION SCROLL EFFECT
      ========================================================================== */
   const navbar = document.getElementById("navbar");
-  
+
   window.addEventListener("scroll", () => {
     if (window.scrollY > 50) {
       navbar.classList.add("scrolled");
@@ -35,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
      INTERSECTION OBSERVER FOR SCROLL REVEALS
      ========================================================================== */
   const revealElements = document.querySelectorAll(".scroll-reveal");
-  
+
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -144,11 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
   tabButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const targetTab = btn.getAttribute("data-tab");
-      
+
       // Toggle buttons
       tabButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      
+
       // Toggle panels
       tabPanels.forEach(panel => {
         panel.classList.remove("active");
@@ -156,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
           panel.classList.add("active");
         }
       });
-      
+
       // Reset active states on all hotspots and reset info cards
       hotspots.forEach(h => h.classList.remove("active"));
       resetInfoCard("east");
@@ -168,26 +176,26 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateInfoCard(tab, roomKey) {
     const card = document.getElementById(`room-card-${tab}`);
     if (!card) return;
-    
+
     const hint = card.querySelector(".card-hint");
     const details = card.querySelector(".card-details");
     const title = card.querySelector(".room-title");
     const dim = card.querySelector(".room-dim");
     const desc = card.querySelector(".room-desc");
     const badgeList = card.querySelector(".room-badge-list");
-    
+
     const roomData = roomDatabase[roomKey];
     if (!roomData) return;
-    
+
     // Hide hint and show details
     hint.style.display = "none";
     details.style.display = "block";
-    
+
     // Insert text
     title.textContent = roomData.title;
     dim.textContent = roomData.dim;
     desc.textContent = roomData.desc;
-    
+
     // Insert badges
     badgeList.innerHTML = "";
     roomData.badges.forEach(b => {
@@ -201,10 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function resetInfoCard(tab) {
     const card = document.getElementById(`room-card-${tab}`);
     if (!card) return;
-    
+
     const hint = card.querySelector(".card-hint");
     const details = card.querySelector(".card-details");
-    
+
     hint.style.display = "flex";
     details.style.display = "none";
   }
@@ -213,22 +221,22 @@ document.addEventListener("DOMContentLoaded", () => {
   hotspots.forEach(hotspot => {
     const roomKey = hotspot.getAttribute("data-room");
     const currentTab = roomKey.startsWith("east") ? "east" : "west";
-    
+
     // Desktop: hover reveals dimensions in the card
     hotspot.addEventListener("mouseenter", () => {
       // Deactivate other hotspots in the current panel
       const parentPanel = hotspot.closest(".tab-panel");
       parentPanel.querySelectorAll(".hotspot").forEach(h => h.classList.remove("active"));
-      
+
       hotspot.classList.add("active");
       updateInfoCard(currentTab, roomKey);
     });
-    
+
     // Mobile / Tablet: click triggers active selection
     hotspot.addEventListener("click", () => {
       const parentPanel = hotspot.closest(".tab-panel");
       parentPanel.querySelectorAll(".hotspot").forEach(h => h.classList.remove("active"));
-      
+
       hotspot.classList.add("active");
       updateInfoCard(currentTab, roomKey);
     });
@@ -240,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest(".hotspot")) {
       return;
     }
-    
+
     // If we click anywhere else, reset the active hotspot in the active panel
     const activePanel = document.querySelector(".tab-panel.active");
     if (activePanel) {
@@ -251,38 +259,87 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ==========================================================================
-     CONTACT FORM SUBMISSION
+     CONTACT FORM SUBMISSION (SUPABASE INTEGRATED)
      ========================================================================== */
   const leadForm = document.getElementById("lead-form");
   const formSuccess = document.getElementById("form-success");
 
   if (leadForm) {
-    leadForm.addEventListener("submit", (e) => {
+    const submitBtn = leadForm.querySelector('button[type="submit"]');
+
+    // Create an inline error element dynamically if it doesn't exist
+    let formError = document.getElementById("form-error");
+    if (!formError) {
+      formError = document.createElement("div");
+      formError.id = "form-error";
+      formError.style.color = "#ef4444";
+      formError.style.fontSize = "0.85rem";
+      formError.style.marginTop = "1rem";
+      formError.style.textAlign = "center";
+      formError.style.fontFamily = "var(--font-sans)";
+      leadForm.appendChild(formError);
+    }
+
+    leadForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      
-      // Get values just to show validation/success
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const message = document.getElementById("message").value.trim();
-      
+      formError.style.display = "none";
+
+      const name = document.getElementById("user-name").value.trim();
+      const email = document.getElementById("user-email").value.trim();
+      const phone = document.getElementById("user-phone").value.trim();
+      const message = document.getElementById("user-message").value.trim();
+
       if (name && email && phone && message) {
-        // Animate out form and show success
-        leadForm.style.transition = "opacity 0.3s ease";
-        leadForm.style.opacity = "0";
-        
-        setTimeout(() => {
-          leadForm.style.display = "none";
-          formSuccess.style.display = "block";
-          formSuccess.style.opacity = "0";
-          
-          // Trigger success fade-in
+        // Disable submit button and show loading state
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.textContent = "Sending Enquiry...";
+        submitBtn.disabled = true;
+
+        try {
+          const formData = {
+            name: name,
+            email: email,
+            phone: phone,
+            message: message
+          };
+
+          // Send data to Supabase
+          const { error } = await supabase
+            .from('villas_enquiries')
+            .insert([formData]);
+
+          if (error) {
+            console.error('Supabase Error:', error);
+            throw new Error(error.message || 'Error inserting row into Supabase');
+          }
+
+          // Successful submission: animate out form and show success
+          leadForm.style.transition = "opacity 0.3s ease";
+          leadForm.style.opacity = "0";
+
           setTimeout(() => {
-            formSuccess.style.transition = "opacity 0.5s ease";
-            formSuccess.style.opacity = "1";
-          }, 50);
-          
-        }, 300);
+            leadForm.style.display = "none";
+            formSuccess.style.display = "block";
+            formSuccess.style.opacity = "0";
+
+            // Trigger success fade-in
+            setTimeout(() => {
+              formSuccess.style.transition = "opacity 0.5s ease";
+              formSuccess.style.opacity = "1";
+            }, 50);
+
+            leadForm.reset();
+          }, 300);
+
+        } catch (err) {
+          console.error('Submission Error:', err);
+          formError.textContent = "Error sending message. Please check connection and try again.";
+          formError.style.display = "block";
+
+          // Re-enable button
+          submitBtn.textContent = originalBtnText;
+          submitBtn.disabled = false;
+        }
       }
     });
   }
